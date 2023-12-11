@@ -20,26 +20,20 @@
       "import": "./styles.css",
       "require": "./styles.css",
       "default": "./styles.css"
-    },
-    "./styles-shgulati.css": {
-      "import": "./styles-shgulati.css",
-      "require": "./styles-shgulati.css",
-      "default": "./styles-shgulati.css"
     }
   },
   "sideEffects": false,
   "license": "MIT",
   "files": [
     "dist/**",
-    "styles.css",
-    "styles-shgulati.css"
+    "styles.css"
   ],
   "scripts": {
     "build": "yarn build:js && yarn build:css",
     "build:js": "yarn build:js:cjs && yarn build:js:esm",
     "build:js:cjs": "tsc --project tsconfig-cjs.json",
     "build:js:esm": "tsc --project tsconfig-esm.json",
-    "build:css": "postcss src/styles/index.css -o styles.css && postcss src/styles/index-shgulati.css -o styles-shgulati.css",
+    "build:css": "postcss src/styles/index.css -o styles.css",
     "dev": "yarn dev:js & yarn dev:css",
     "dev:js": "yarn dev:js:cjs & yarn dev:js:esm",
     "dev:js:cjs": "tsc --project tsconfig-cjs.json --watch",

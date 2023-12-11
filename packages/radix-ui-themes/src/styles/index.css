@@ -10,45 +10,45 @@
 @import './tokens/space.css';
 @import './tokens/typography.css';
 
-@import '../components/alert-dialog.css';
-@import '../components/avatar.css';
+/* @import '../components/alert-dialog.css'; */
+/* @import '../components/avatar.css'; */
 @import '../components/badge.css';
 @import '../components/blockquote.css';
 @import '../components/box.css';
 @import '../components/button.css';
 @import '../components/callout.css';
-@import '../components/card.css';
-@import '../components/checkbox.css';
+/* @import '../components/card.css'; */
+/* @import '../components/checkbox.css'; */
 @import '../components/code.css';
 @import '../components/container.css';
-@import '../components/context-menu.css';
+/* @import '../components/context-menu.css'; */
 @import '../components/dialog.css';
-@import '../components/dropdown-menu.css';
+/* @import '../components/dropdown-menu.css'; */
 @import '../components/em.css';
 @import '../components/flex.css';
 @import '../components/grid.css';
 @import '../components/heading.css';
-@import '../components/hover-card.css';
+/* @import '../components/hover-card.css'; */
 @import '../components/icon-button.css';
-@import '../components/inset.css';
+/* @import '../components/inset.css'; */
 @import '../components/kbd.css';
 @import '../components/link.css';
-@import '../components/popover.css';
+/* @import '../components/popover.css'; */
 @import '../components/quote.css';
-@import '../components/radio-group.css';
+/* @import '../components/radio-group.css'; */
 @import '../components/scroll-area.css';
 @import '../components/section.css';
-@import '../components/select.css';
+/* @import '../components/select.css'; */
 @import '../components/separator.css';
-@import '../components/slider.css';
+/* @import '../components/slider.css'; */
 @import '../components/strong.css';
-@import '../components/switch.css';
-@import '../components/tabs.css';
+/* @import '../components/switch.css'; */
+/* @import '../components/tabs.css'; */
 @import '../components/table.css';
-@import '../components/text-area.css';
-@import '../components/text-field.css';
+/* @import '../components/text-area.css'; */
+/* @import '../components/text-field.css'; */
 @import '../components/text.css';
-@import '../components/tooltip.css';
+/* @import '../components/tooltip.css'; */
 
 @import './utilities/align-items.css';
 @import './utilities/align-self.css';
@@ -71,4 +71,4 @@
 @import './utilities/vertical-align.css';
 @import './utilities/width.css';
 
-@import '../theme-panel.css';
+/* @import '../theme-panel.css'; */
