@@ -1,15 +1,21 @@
+// @ts-check
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
-const postcss = require('postcss');
+const postcssModule = require('postcss');
 
 // Build a list of breakpoints from "@custom media" rules in "breakpoints.css"
 const breakpointsFile = path.resolve('./src/styles/breakpoints.css');
 const breakpointsCss = fs.readFileSync(breakpointsFile, 'utf-8');
-const breakpoints = postcss
+const breakpoints = postcssModule
   .parse(breakpointsCss)
   .nodes.map((node) => {
     if (node.type === 'atrule' && node.name === 'custom-media') {
-      const [_match, name, params] = node.params.match(/--(\w+)\s+(.+)/);
+      const match = node.params.match(/--(\w+)\s+(.+)/);
+      if (!match) {
+        throw new Error(`Invalid custom media rule: ${node.params}`);
+      }
+      const [_match, name, params] = match;
       return { name, params };
     }
 
@@ -19,22 +25,29 @@ const breakpoints = postcss
 
 const cache = new WeakMap();
 
-module.exports = () => ({
+/**
+ * @returns {Plugin}
+ */
+const plugin = () => ({
   postcssPlugin: 'postcss-breakpoints',
   Rule(rule) {
-    if (rule.parent.name === 'breakpoints') {
+    if (rule.parent && 'name' in rule.parent && rule.parent.name === 'breakpoints') {
       const breakpointsRule = rule.parent;
-
       // when we first meet a given @breakpoints at-rule
       if (!cache.has(breakpointsRule)) {
+        /** @type {Record<string, AtRule>} */
+        const init = {};
         // create the final media rules for this @breakpoints at-rule
         const medias = breakpoints.reduce((breakpointsMedias, breakpoint) => {
-          breakpointsMedias[breakpoint.name] = new postcss.AtRule({
+          if (!breakpoint) {
+            return breakpointsMedias;
+          }
+          breakpointsMedias[breakpoint.name] = new postcssModule.AtRule({
             name: 'media',
             params: breakpoint.params,
           });
           return breakpointsMedias;
-        }, {});
+        }, init);
 
         // add an entry to the cache
         cache.set(breakpointsRule, medias);
@@ -57,9 +70,11 @@ module.exports = () => ({
 
       // add breakpoint-level rules
       breakpoints.forEach((breakpoint) => {
-        const clone = originalRule.clone();
-        addPrefix(clone, breakpoint.name);
-        cache.get(breakpointsRule)[breakpoint.name].append(clone);
+        if (breakpoint) {
+          const clone = originalRule.clone();
+          addPrefix(clone, breakpoint.name);
+          cache.get(breakpointsRule)[breakpoint.name].append(clone);
+        }
       });
 
       // remove @breakpoints at-rule and clear cache if it has no rules
@@ -71,8 +86,13 @@ module.exports = () => ({
   },
 });
 
+module.exports = plugin;
 module.exports.postcss = true;
 
+/**
+ * @param {AtRule | ChildNode} node
+ * @param {string} prefix
+ */
 function addPrefix(node, prefix) {
   if (node.type === 'atrule') {
     node.each((child) => addPrefix(child, prefix));
@@ -97,14 +117,20 @@ function addPrefix(node, prefix) {
   // - followed by 2 or more prop selectors (lowercase, numbers, -)
   //
   // e.g. ".rt-DialogContent.rt-r-size-2.gray"
-  if (/\.rt-(?:[A-Z][a-z]+)+(?:\.[a-z0-9-]+){2,}/.test(node.selector)) {
+  if ('selector' in node && /\.rt-(?:[A-Z][a-z]+)+(?:\.[a-z0-9-]+){2,}/.test(node.selector)) {
     throw Error(`
       "${node.selector}" looks like it uses compound props on a component.
       "@breakpoints" does not support compound props yet.
     `);
   }
 
-  if (classNameRegexp.test(node.selector)) {
+  if ('selector' in node && classNameRegexp.test(node.selector)) {
     node.selector = node.selector.replace(classNameRegexp, `.${prefix}\\:$1`);
   }
 }
+
+/**
+ * @typedef {import('postcss').Plugin} Plugin
+ * @typedef {import('postcss').AtRule} AtRule
+ * @typedef {import('postcss').ChildNode} ChildNode
+ */

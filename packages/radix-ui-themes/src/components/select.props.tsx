@@ -12,16 +12,16 @@ const selectRootPropDefs = {
   size: PropDef<(typeof sizes)[number]>;
 };
 
-const triggerVariants = ['classic', 'surface', 'soft', 'ghost'] as const;
+const triggerVariants = ['classic', 'surface', 'soft', 'ghost-offset', 'ghost'] as const;
 
 const selectTriggerPropDefs = {
   variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'surface' },
   ...colorPropDef,
   ...radiusPropDef,
-  placeholder: { type: 'string' },
+  placeholder: { type: 'ReactNode' },
 } satisfies {
   variant: PropDef<(typeof triggerVariants)[number]>;
-  placeholder: PropDef<string>;
+  placeholder: PropDef<React.ReactNode>;
 };
 
 const contentVariants = ['solid', 'soft'] as const;

@@ -1,5 +1,10 @@
+// @ts-check
 // Clean up the whitespace mess left behind by other plugins
-module.exports = () => ({
+
+/**
+ * @returns {Plugin}
+ */
+const plugin = () => ({
   postcssPlugin: 'postcss-whitespace',
   Comment(comment) {
     // Remove all comments
@@ -24,4 +29,9 @@ module.exports = () => ({
   },
 });
 
+module.exports = plugin;
 module.exports.postcss = true;
+
+/**
+ * @typedef {import('postcss').Plugin} Plugin
+ */

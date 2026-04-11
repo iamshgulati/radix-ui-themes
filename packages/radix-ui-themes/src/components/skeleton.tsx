@@ -14,14 +14,12 @@ import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-p
 type SkeletonElement = React.ElementRef<'span'>;
 type SkeletonOwnProps = GetPropDefTypes<typeof skeletonPropDefs>;
 interface SkeletonProps
-  extends ComponentPropsWithout<'span', RemovedProps>,
-    MarginProps,
-    SkeletonOwnProps {}
+  extends ComponentPropsWithout<'span', RemovedProps>, MarginProps, SkeletonOwnProps {}
 const Skeleton = React.forwardRef<SkeletonElement, SkeletonProps>((props, forwardedRef) => {
   const { children, className, loading, ...skeletonProps } = extractProps(
     props,
     skeletonPropDefs,
-    marginPropDefs
+    marginPropDefs,
   );
 
   if (!loading) return children;
@@ -35,7 +33,6 @@ const Skeleton = React.forwardRef<SkeletonElement, SkeletonProps>((props, forwar
       className={classNames('rt-Skeleton', className)}
       data-inline-skeleton={React.isValidElement(children) ? undefined : true}
       tabIndex={-1}
-      // @ts-expect-error
       inert={inert}
       {...skeletonProps}
     >
